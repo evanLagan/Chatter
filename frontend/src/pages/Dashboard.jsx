@@ -42,7 +42,10 @@ const Dashboard = () => {
             <ul>
                 {users.map(user => (
                     <li key={user.id}>
-                        {user.username} - joined on {new Date(user.created_at).toLocaleDateString()}
+                        {user.username}
+                        <button onClick={() => navigate(`/chat/${user.id}`)} style={{marginLeft: 10}}>
+                            Chat
+                        </button>
                     </li>
                 ))}
             </ul>
