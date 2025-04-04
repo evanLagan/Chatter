@@ -20,9 +20,7 @@ def get_current_user_data(current_user: models.User = Depends(get_current_user))
 @router.get("/")
 def get_all_users(db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
     users = db.query(models.User).filter(models.User.id != current_user.id).all()
-    
-    # List comprehension is being used here
-    
+     
     return [
         {
             "id": user.id,
@@ -31,3 +29,13 @@ def get_all_users(db: Session = Depends(get_db), current_user: models.User = Dep
         }
         for user in users
     ]
+    
+@router.get("/{user_id}")
+def get_user_id(user_id: int, db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
+    user = db.query(models.User).filter(models.User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return {
+        "id": user.id,
+        "username": user.username
+    }

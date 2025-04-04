@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import API from '../services/api';
 
@@ -6,7 +6,22 @@ const Chat = () => {
     const { userId } = useParams();
     const [messages, setMessages] = useState([]);
     const [content, setContent] = useState('');
+    const [username, setUsername] = useState('');
+
+    const ws = useRef(null);
+    
     const token = localStorage.getItem('token');
+
+    const fetchUsername = async () => {
+        try {
+            const res = await API.get(`/users/${userId}`, {
+                headers: { Authorization: `Bearer ${token}`}
+            });
+            setUsername(res.data.username);
+        } catch (err) {
+            console.error('Error fetching username:', err);
+        }
+    };
 
     const fetchMessages = async () => {
         try {
@@ -19,6 +34,7 @@ const Chat = () => {
         }
     };
 
+    /*
     const sendMessage = async () => {
         if (!content.trim()) return;
         try {
@@ -34,19 +50,51 @@ const Chat = () => {
             console.error('Error sending message: ', err);
         }
     };
+    */
+    
+    const sendMessage = () => {
+        if (!content.trim()) return;
+
+        const messageData = {
+            receiver_id: parseInt(userId),
+            content
+        };
+
+        if (ws.current && ws.current.readyState === WebSocket.OPEN) {
+            ws.current.send(JSON.stringify(messageData));
+            setContent('');
+        }
+    };
 
     useEffect(() => {
+        fetchUsername();
         fetchMessages();
+
+        // Set up websockets
+        ws.current = new WebSocket(`ws://localhost:8000/messages/ws/chat?token=${token}`);
+
+        ws.current.onmessage = (event) => {
+            const msg = JSON.parse(event.data);
+            setMessages((prev) => [...prev, msg]);
+        };
+
+        ws.current.onclose = () => {
+            console.warn('WebSocket disconnected');
+        };
+
+        return () => {
+            if (ws.current) ws.current.close();
+        };
     }, [userId]);
 
 
     return (
         <div>
-            <h2>Chat with User #{userId}</h2>
+            <h2>Chatting with: {username} </h2>
             <div style={{ border: '1px solid #ccc', padding: '1rem', height: '300px', overflowY: 'auto' }}>
                 {messages.map((msg, idx) => (
                     <div key={idx}>
-                        <b>{msg.sender_id === parseInt(userId) ? `Them`: `You`}:</b> {msg.content}
+                        <b>{msg.sender_id === parseInt(userId) ? username: `You`}:</b> {msg.content}
                     </div>
                 ))}
             </div>
