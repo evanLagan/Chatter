@@ -1,12 +1,14 @@
 import { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import API from '../services/api';
+import '../styles/Chat.css';
 
 const Chat = () => {
     const { userId } = useParams();
     const [messages, setMessages] = useState([]);
     const [content, setContent] = useState('');
     const [username, setUsername] = useState('');
+    const bottomRef = useRef(null);
 
     const ws = useRef(null);
     
@@ -87,18 +89,26 @@ const Chat = () => {
         };
     }, [userId]);
 
+    useEffect(() => {
+        if (bottomRef.current) {
+            bottomRef.current.scrollIntoView({ behavior: 'smooth'});
+        }
+    }, [messages]);
+
 
     return (
-        <div>
+     <div className="chat-page">
+        <div className="chat-container">
             <h2>Chatting with: {username} </h2>
-            <div style={{ border: '1px solid #ccc', padding: '1rem', height: '300px', overflowY: 'auto' }}>
+            <div className="chat-messages">
                 {messages.map((msg, idx) => (
-                    <div key={idx}>
+                    <div key={idx} className={`chat-message ${msg.sender_id === parseInt(userId) ? 'from-them' : 'from-you'}`}>
                         <b>{msg.sender_id === parseInt(userId) ? username: `You`}:</b> {msg.content}
                     </div>
                 ))}
+                <div ref={bottomRef} />
             </div>
-            <div style={{ marginTop: '1rem'}}>
+            <div className="chat-input">
                 <input
                     type="text"
                     value={content}
@@ -109,6 +119,7 @@ const Chat = () => {
                 <button onClick={sendMessage} style={{ marginLeft: 10 }}>Send</button>
             </div>
         </div>
+     </div>
     );
 };
 

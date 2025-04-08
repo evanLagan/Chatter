@@ -1,0 +1,45 @@
+.dashboard-container {
+    padding: 2rem;
+    min-height: 100vh;
+    background-color: #f9fafc;
+  }
+
+  .user-list {
+    list-style: none;
+    max-width: 9000px;
+    margin: 0 auto;
+    background-color: white;
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+
+  }
+  
+  .user-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f5f5f5;
+    padding: 1rem;
+    margin-bottom: 10px;
+    border-radius: 8px;
+  }
+  
+  .chat-button {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    background-color: #f1d03d;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .chat-button:hover {
+    background-color: #df4b26;
+  }
+  
+  
+  
+  

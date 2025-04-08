@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import API from '../services/api';
 import { useNavigate, Link } from 'react-router-dom';
+import '../styles/Login.css';
 
 const Login = () => {
     const [form, setForm ] = useState({ username: '', password: '' });
@@ -19,8 +20,9 @@ const Login = () => {
     };
 
     return (
-        <div>
-            <h2>Login</h2>
+     <div className="login-container">
+        <div className="login-box">
+            <h2>Chatter</h2>
             {error && <p style={{ color: 'red' }}>{error}</p>}
             <form onSubmit={handleSubmit}>
                 <input
@@ -37,8 +39,9 @@ const Login = () => {
                 /><br />
                 <button type="submit">Login</button>
             </form>
-            <p>Don't have an account? <Link to="/register">Register</Link></p>
+            <p>Don't have an account? <Link to="/register">Create one here</Link></p>
         </div>
+     </div>
     );
 };
 

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import API from '../services/api';
+import '../styles/Dashboard.css';
 
 const Dashboard = () => {
     const [users, setUsers] = useState([]);
@@ -35,27 +36,27 @@ const Dashboard = () => {
 
 
     return (
-        <div>
+        <div className="dashboard-container">
             <h2>Dashboard</h2>
             <p>Welcome! You are set to go.</p>
-            <p>Other users you can chat with:</p>
-            <ul>
-                {users.map(user => (
-                    <li key={user.id}>
-                        {user.username}
-                        <button onClick={() => navigate(`/chat/${user.id}`)} style={{marginLeft: 10}}>
-                            Chat
-                        </button>
-                    </li>
-                ))}
-            </ul>
-            <button 
+            <button
                 onClick={() => {
                     localStorage.removeItem('token');
                     navigate('/');
                 }}>
                 Logout
             </button>
+            <p>Users you can chat with:</p>
+            <ul className="user-list">
+                {users.map(user => (
+                    <li key={user.id} className="user-item">
+                        {user.username}
+                        <button className="chat-button" onClick={() => navigate(`/chat/${user.id}`)} style={{marginLeft: 10}}>
+                            Message
+                        </button>
+                    </li>
+                ))}
+            </ul>
         </div>
     );
 
