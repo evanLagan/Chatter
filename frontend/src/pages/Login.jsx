@@ -13,6 +13,7 @@ const Login = () => {
         try {
             const res = await API.post('/auth/login', form);
             localStorage.setItem('token', res.data.access_token);
+            localStorage.setItem('userId', res.data.user_id);
             navigate('/dashboard');
         } catch (err) {
             setError('Invalid Credentials');

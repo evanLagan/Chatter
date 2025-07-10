@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from .database import Base, engine
-from .routers import auth, users, messages
+from .routers import auth, users, messages, groups
 from .models import User
 from .utils import get_password_hash
 from .database import SessionLocal
@@ -33,6 +33,7 @@ Base.metadata.create_all(bind=engine)
 app.include_router(auth.router)
 app.include_router(users.router)
 app.include_router(messages.router)
+app.include_router(groups.router)
 
 @app.get("/")
 def root():

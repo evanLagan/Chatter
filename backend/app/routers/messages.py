@@ -69,8 +69,6 @@ async def websocket_endpoint(websocket: WebSocket, token: str = Query(...), db: 
         manager.disconnect(user_id, websocket)
         
 
-
-
 @router.post("/")
 def send_message(
     message: MessageCreate,
@@ -99,3 +97,84 @@ def get_messages_with_user(user_id: int, db: Session = Depends(get_db), current_
         ((models.Message.sender_id == user_id) & (models.Message.receiver_id == current_user.id))
     ).order_by(models.Message.timestamp).all()
     return messages
+
+
+# Group Chat Messages
+
+group_connections = {}
+
+@router.websocket("/ws/group/{group_id}")
+async def group_chat_websocket(websocket: WebSocket, group_id: int, token: str = Query(...), db: Session = Depends(get_db)):
+    try:
+        payload = decode_token(token)
+        username = payload.get("sub")
+        user = db.query(models.User).filter_by(username=username).first()
+        if not user:
+            await websocket.close(code=1008)
+            return
+        user_id = user.id
+        print("Token validated:", user_id)
+    except Exception as e:
+        print("WebSocket token error:", e)
+        await websocket.close(code=1008)
+        return
+
+    # Accept connection only after validation
+    await websocket.accept()
+
+    if group_id not in group_connections:
+        group_connections[group_id] = []
+    group_connections[group_id].append(websocket)
+
+    try:
+        while True:
+            data = await websocket.receive_json()
+            content = data.get("content")
+
+            new_msg = models.GroupMessage(
+                sender_id=user_id,
+                group_id=group_id,
+                content=content,
+                timestamp=datetime.utcnow()
+            )
+            db.add(new_msg)
+            db.commit()
+            db.refresh(new_msg)
+
+            # Prepare data to send
+            msg_data = {
+                "sender_id": user_id,
+                "content": content,
+                "timestamp": new_msg.timestamp.isoformat()
+            }
+
+            for conn in group_connections[group_id]:
+                await conn.send_json(msg_data)
+
+    except WebSocketDisconnect:
+        group_connections[group_id].remove(websocket)
+
+
+   
+@router.get("/group/{group_id}")
+def get_group_messages(group_id: int, db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
+    # Make sure that the user belongs to the group
+    is_member = db.query(models.GroupMembership).filter_by(group_id=group_id, user_id=current_user.id).first()
+    if not is_member:
+        raise HTTPException(status_code=403, detail="You are not a member of this group")
+    
+    messages = db.query(models.GroupMessage).filter_by(group_id=group_id).order_by(models.GroupMessage.timestamp).all()
+    
+    # Include sender username in each message
+    results = []
+    for msg in messages:
+        sender = db.query(models.User).filter_by(id=msg.sender_id).first()
+        results.append({
+            "id": msg.id,
+            "group_id": msg.group_id,
+            "sender_id": msg.sender_id,
+            "sender_username": sender.username if sender else "Unkown",
+            "content": msg.content,
+            "timestamp": msg.timestamp.isoformat()
+        })
+    return results
