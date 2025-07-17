@@ -55,7 +55,10 @@ const GroupChat = () => {
         fetchMessages();
         fetchGroupInfo();
 
-        ws.current = new WebSocket(`ws://localhost:8000/messages/ws/group/${groupId}?token=${token}`);
+        //ws.current = new WebSocket(`ws://localhost:8000/messages/ws/group/${groupId}?token=${token}`);
+        ws.current = new WebSocket(
+            `${import.meta.env.VITE_WS_URL}/messages/ws/group/${groupId}?token=${token}`
+        );
 
         ws.current.onmessage = (event) => {
             const msg = JSON.parse(event.data);

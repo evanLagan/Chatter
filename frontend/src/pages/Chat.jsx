@@ -36,23 +36,6 @@ const Chat = () => {
         }
     };
 
-    /*
-    const sendMessage = async () => {
-        if (!content.trim()) return;
-        try {
-            await API.post('/messages/', {
-                receiver_id: parseInt(userId),
-                content
-            }, {
-                headers: {Authorization: `Bearer ${token}`}
-            });
-            setContent('');
-            fetchMessages(); // Refresh the chat
-        } catch (err) {
-            console.error('Error sending message: ', err);
-        }
-    };
-    */
     
     const sendMessage = () => {
         if (!content.trim()) return;
@@ -72,8 +55,11 @@ const Chat = () => {
         fetchUsername();
         fetchMessages();
 
-        // Set up websockets
-        ws.current = new WebSocket(`ws://localhost:8000/messages/ws/chat?token=${token}`);
+        //ws.current = new WebSocket(`ws://localhost:8000/messages/ws/chat?token=${token}`);
+
+        ws.current = new WebSocket(
+            `${import.meta.env.VITE_WS_URL}/messages/ws/chat?token=${token}`
+        );
 
         ws.current.onmessage = (event) => {
             const msg = JSON.parse(event.data);

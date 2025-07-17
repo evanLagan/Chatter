@@ -5,18 +5,20 @@ from .routers import auth, users, messages, groups
 from .models import User
 from .utils import get_password_hash
 from .database import SessionLocal
+import os
+from dotenv import load_dotenv
+load_dotenv()
+
+origins = [os.getenv("FRONTEND_URL", "http://localhost:3000")]
 
 
 app = FastAPI()
 
-# Use the following command to start the app
+# Use the following command to start the app:
 # python -m uvicorn app.main:app --reload --loop asyncio --workers 1
-"""
-If you are getting a stale terminal make sure to kill any existing python process
+# If you are getting a stale terminal make sure to kill any existing python process:
+# taskkill /F /IM python.exe
 
-taskkill /F /IM python.exe
-
-"""
 
 app.add_middleware(
     CORSMiddleware,
