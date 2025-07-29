@@ -17,7 +17,7 @@ const Dashboard = () => {
         if (!token) {
             navigate('/');
         }
-
+	/*
         const fetchData = async () => {
             try {
                 const userRes = await API.get('/users/', {
@@ -34,6 +34,40 @@ const Dashboard = () => {
                 console.error('Error fetching users or groups:', err);
             }
         };
+	*/
+
+	// Attempting to fix r.map issue when loading dashboard
+	const fetchData = async () => {
+  	  try {
+    	    const userRes = await API.get('/users/', {
+              headers: { Authorization: `Bearer ${token}` }
+            });
+
+    	    if (Array.isArray(userRes.data)) {
+              setUsers(userRes.data);
+            } else {
+              console.warn("User API response is not an array:", userRes.data);
+              setUsers([]);
+            }
+
+            const groupRes = await API.get('/groups/', {
+               headers: { Authorization: `Bearer ${token}` }
+            });
+
+            if (Array.isArray(groupRes.data)) {
+              setGroups(groupRes.data);
+            } else {
+                console.warn("Group API response is not an array:", groupRes.data);
+                setGroups([]);
+            }
+
+          } catch (err) {
+            console.error('Error fetching users or groups:', err);
+            setUsers([]);
+            setGroups([]);
+          }
+        };
+
 
 
         fetchData();
