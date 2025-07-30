@@ -12,21 +12,25 @@ The key features include:
 ## Preview
 
 Login page:
-![App screenshot](/assets/Screenshot 2025-07-30 211129.png)
+
+![App screenshot](/assets/login.png)
 
 Dashboard:
-![App screenshot](/assets/Screenshot 2025-07-30 211220.png)
+
+![App screenshot](/assets/dashboard.png)
 
 Group chat:
-![App screenshot](/assets/Screenshot 2025-07-30 212852.png)
+
+![App screenshot](/assets/gc.png)
 
 Live DM messaging:
+
 ![Demo](/assets/chatter_dm.gif)
 
 
-## 🚀 Installation Instructions
+## Installation Instructions
 
-### 📦 Requirements
+### Requirements
 
 - Python 3.10+
 - Node.js 18+ with npm
@@ -36,7 +40,7 @@ Live DM messaging:
 
 ---
 
-### 🔧 1. Clone the Repo
+### 1. Clone the Repo
 
 ```bash
 git clone https://github.com/yourusername/your-repo.git
