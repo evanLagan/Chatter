@@ -12,16 +12,16 @@ The key features include:
 ## Preview
 
 Login page:
-![App screenshot](\assets\Screenshot 2025-07-30 211129.png)
+![App screenshot](/assets/Screenshot 2025-07-30 211129.png)
 
 Dashboard:
-![App screenshot](\assets\Screenshot 2025-07-30 211220.png)
+![App screenshot](/assets/Screenshot 2025-07-30 211220.png)
 
 Group chat:
-![App screenshot](\assets\Screenshot 2025-07-30 212852.png)
+![App screenshot](/assets/Screenshot 2025-07-30 212852.png)
 
 Live DM messaging:
-![Demo](\assets\chatter_dm.gif)
+![Demo](/assets/chatter_dm.gif)
 
 
 ## 🚀 Installation Instructions
