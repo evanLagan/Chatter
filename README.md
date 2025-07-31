@@ -43,8 +43,8 @@ Live DM messaging:
 ### 1. Clone the Repo
 
 ```bash
-git clone https://github.com/yourusername/your-repo.git
-cd your-repo
+git clone https://github.com/evanLagan/Chatter.git
+cd Chatter
 ```
 ### 2. Set up the backend
 ```bash
@@ -85,8 +85,6 @@ npm run dev
 ## Future work
 This project is far from finished. Some features that still need to be implemented include message notifications, the ability to edit and delete group chats, some sort of friend system, and other features like editing the backgrounds of group chats, etc.
 
-It's essentially a very barebones project, but it still shows real-time messaging in action.
-
-The site is set up on an AWS EC2 instance, with Nginx serving the frontend, but I haven’t set up a domain name yet (you’ll notice the IP address in the browser URL in the demo), and the backend isn’t persistent yet. I might add a guest mode and some example messages with bots to make it more accessible for demo purposes in the future.
+The site is set up on an AWS EC2 instance, with Nginx serving the frontend, but I haven’t set up a domain name yet (you’ll notice the IP address in the browser URL in the demo), and the backend is not yet persistent. I plan to add a guest mode and some example messages with bots before making it publically available.
 
 
